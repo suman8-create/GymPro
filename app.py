@@ -8,11 +8,21 @@ from datetime import date, timedelta, datetime
 from collections import Counter
 import csv
 import io
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gym.db'
+
+# Look for a DATABASE_URL from Render. If it doesn't exist, use local SQLite.
+db_url = os.environ.get('DATABASE_URL', 'sqlite:///gym.db')
+
+# SQLAlchemy requires 'postgresql://' but Render sometimes provides 'postgres://'
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+# Set the configurations ONLY ONCE
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'gym-secret-key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-local-secret-key')
 app.config['SCHEDULER_API_ENABLED'] = True # Required for APScheduler
 
 db.init_app(app)
