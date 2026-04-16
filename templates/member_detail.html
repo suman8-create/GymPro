@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}{{ member.name }} — GymPro{% endblock %}
+{% block content %}
+<a href="{{ url_for('index') }}" class="text-decoration-none text-muted mb-4 d-inline-block">
+  <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+</a>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm p-4 text-center h-100">
+      <div class="bg-primary text-white rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 90px; height: 90px; font-size: 2.5rem; font-weight: bold;">
+        {{ member.name[0].upper() }}
+      </div>
+      <h2 class="mb-1">{{ member.name }}</h2>
+      <p class="text-muted mb-4"><i class="bi bi-telephone me-2"></i>{{ member.phone }}</p>
+      
+      <div>
+        {% if member.is_active %}
+          <span class="badge bg-success-subtle text-success border border-success-subtle px-4 py-2 fs-6 w-100 rounded-pill">Status: Active</span>
+          <p class="text-muted small mt-2">Expires: {{ member.subscription_end_date.strftime('%d %b %Y') }}</p>
+        {% else %}
+          <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-4 py-2 fs-6 w-100 rounded-pill">Status: Expired</span>
+        {% endif %}
+      </div>
+
+      <hr class="my-4 text-muted opacity-25">
+
+      <div class="text-start">
+        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+          <span class="text-muted small text-uppercase">Plan Type</span>
+          <span class="fw-bold">{{ member.plan_type }}</span>
+        </div>
+        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+          <span class="text-muted small text-uppercase">Trainer</span>
+          <span class="fw-bold text-primary">{{ member.trainer.name if member.trainer else 'None' }}</span>
+        </div>
+        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+          <span class="text-muted small text-uppercase">Joined</span>
+          <span class="fw-bold">{{ member.join_date.strftime('%d %b %Y') }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="text-muted small text-uppercase">Loyalty Badge</span>
+          <span class="badge bg-{{ badge[1] }} shadow-sm">{{ badge[0] }}</span>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2 mt-4 pt-2">
+        <a href="{{ url_for('mark_attendance', member_id=member.id) }}" class="btn btn-success py-2"><i class="bi bi-calendar-plus me-2"></i>Mark Today</a>
+        <a href="{{ url_for('record_payment', member_id=member.id) }}" class="btn btn-outline-warning py-2" onclick="return confirm('Record renewal?');"><i class="bi bi-currency-dollar me-2"></i>Renew Plan</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="mb-0"><i class="bi bi-wallet2 me-2 text-primary"></i>Payment Ledger</h5>
+      </div>
+      <div class="card-body p-0">
+        {% if payments %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4">Date</th>
+                <th>Amount</th>
+                <th>Plan Credited</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for payment in payments %}
+              <tr>
+                <td class="ps-4 fw-medium">{{ payment.payment_date.strftime('%d %b %Y') }}</td>
+                <td class="text-success fw-bold">${{ payment.amount }}</td>
+                <td><span class="badge bg-light text-dark border">{{ payment.plan_credited }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+          <p class="text-muted mb-0">No payment records found.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Check-in History</h5>
+        <span class="badge bg-light text-dark border">{{ total_days }} Total Visits</span>
+      </div>
+      <div class="card-body p-0">
+        {% if records %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4 py-3">Date</th>
+                <th>Day</th>
+                <th class="pe-4 text-end">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for record in records %}
+              <tr>
+                <td class="ps-4 fw-medium">{{ record.date.strftime('%d %b %Y') }}</td>
+                <td class="text-muted">{{ record.date.strftime('%A') }}</td>
+                <td class="pe-4 text-end text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Present</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+          <i class="bi bi-inbox text-muted opacity-25 display-1"></i>
+          <p class="text-muted mt-3">No attendance logs found for this member.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

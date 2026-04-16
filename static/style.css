@@ -1,0 +1,115 @@
+/* ============================================
+   GymPro — Modern Light UI
+   ============================================ */
+
+:root {
+  --bg-body:     #f8fafc;
+  --bg-card:     #ffffff;
+  --text-main:   #1e293b;
+  --text-muted:  #64748b;
+  --primary:     #3b82f6; /* Modern Blue */
+  --accent:      #f59e0b; /* Amber */
+  --success:     #10b981;
+  --danger:      #ef4444;
+  --border:      #e2e8f0;
+  --radius:      12px;
+  --shadow:      0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+h1, h2, h3, .navbar-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+}
+
+/* ---- Navbar ---- */
+#mainNav {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  box-shadow: var(--shadow);
+}
+
+.navbar-brand { font-size: 1.8rem; }
+.nav-link {
+  color: var(--text-muted) !important;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.nav-link:hover, .nav-link.active { color: var(--primary) !important; }
+
+/* ---- Stats Section ---- */
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.stat-icon-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.stat-value { font-size: 1.5rem; font-weight: 700; margin-bottom: -5px; }
+.stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+
+/* ---- Table Design ---- */
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.table { margin-bottom: 0; }
+.table thead th {
+  background: #f1f5f9;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-top: none;
+  padding: 1rem;
+}
+
+.table td { padding: 1.2rem 1rem; vertical-align: middle; border-color: var(--border); }
+
+/* ---- Buttons & Badges ---- */
+.btn { border-radius: 8px; font-weight: 500; padding: 0.5rem 1.2rem; transition: 0.3s; }
+.btn-primary { background: var(--primary); border: none; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+
+.badge {
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* Form Controls */
+.form-control {
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 0.6rem 1rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}

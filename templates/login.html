@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Login — GymPro{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6 col-lg-5">
+    <div class="card border-0 shadow-sm p-5">
+      <div class="text-center mb-4">
+        <i class="bi bi-lightning-fill text-warning display-4"></i>
+        <h2 class="mt-2 fw-bold">GymPro Login</h2>
+        <p class="text-muted">Sign in to manage your members</p>
+      </div>
+
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="mb-3">
+          <label class="form-label text-muted small text-uppercase fw-bold">Username</label>
+          <input type="text" class="form-control form-control-lg bg-light" name="username" required autofocus>
+        </div>
+        
+        <div class="mb-4">
+          <label class="form-label text-muted small text-uppercase fw-bold">Password</label>
+          <input type="password" class="form-control form-control-lg bg-light" name="password" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm fw-bold mt-2">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+        </button>
+      </form>
+      
+    </div>
+  </div>
+</div>
+{% endblock %}

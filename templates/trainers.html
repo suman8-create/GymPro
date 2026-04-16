@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Trainers — GymPro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <h1 class="display-5 mb-0">Personal Trainers</h1>
+    <p class="text-muted">Manage gym trainers and their assigned members</p>
+  </div>
+  <a href="{{ url_for('add_trainer') }}" class="btn btn-primary btn-lg shadow-sm">
+    <i class="bi bi-person-plus-fill me-2"></i>Add Trainer
+  </a>
+</div>
+
+{% if trainers %}
+  <div class="row g-4">
+    {% for trainer in trainers %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                 style="width: 50px; height: 50px; font-size: 1.2rem; flex-shrink: 0;">
+              {{ trainer.name[0].upper() }}
+            </div>
+            <div>
+              <h5 class="mb-0">{{ trainer.name }}</h5>
+              <span class="badge bg-info-subtle text-info border border-info-subtle mt-1">
+                <i class="bi bi-stars me-1"></i>{{ trainer.specialty }}
+              </span>
+            </div>
+          </div>
+
+          <hr class="my-3" />
+          <p class="small text-muted mb-2 fw-bold text-uppercase" style="letter-spacing:.05em">
+            Assigned Members ({{ trainer.members|length }})
+          </p>
+
+          {% if trainer.members %}
+            <ul class="list-unstyled mb-0">
+              {% for member in trainer.members %}
+              <li class="d-flex align-items-center justify-content-between py-1">
+                <a href="{{ url_for('member_detail', member_id=member.id) }}"
+                   class="text-decoration-none text-dark fw-bold">
+                  <i class="bi bi-person-circle me-2 text-muted"></i>{{ member.name }}
+                </a>
+                {% if member.is_active %}
+                  <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:.7rem">Active</span>
+                {% else %}
+                  <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size:.7rem">Expired</span>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted fst-italic small mb-0">No members assigned yet.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+{% else %}
+<div class="text-center py-5 bg-white rounded shadow-sm border">
+  <i class="bi bi-person-x display-1 text-light"></i>
+  <h3 class="mt-3">No Trainers Yet</h3>
+  <p class="text-muted">Add your first trainer to get started.</p>
+  <a href="{{ url_for('add_trainer') }}" class="btn btn-primary px-4">Add Trainer</a>
+</div>
+{% endif %}
+
+{% endblock %}

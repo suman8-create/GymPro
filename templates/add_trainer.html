@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Add Trainer — GymPro{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+
+    <a href="{{ url_for('trainers') }}" class="text-decoration-none text-muted mb-3 d-inline-block">
+      <i class="bi bi-arrow-left me-1"></i> Back to Trainers
+    </a>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-5">
+        <h2 class="mb-4">Add Trainer</h2>
+        <p class="text-muted mb-4">Register a new personal trainer profile to the system.</p>
+
+        <form method="POST" action="{{ url_for('add_trainer') }}">
+          <div class="row g-4">
+            
+            <div class="col-12">
+              <label for="name" class="form-label text-muted small text-uppercase">Full Name</label>
+              <input type="text" class="form-control form-control-lg" id="name" name="name"
+                     placeholder="e.g. Arjun Mehta" required />
+            </div>
+
+            <div class="col-12">
+              <label for="specialty" class="form-label text-muted small text-uppercase">Specialty Focus</label>
+              <input type="text" class="form-control form-control-lg" id="specialty" name="specialty"
+                     placeholder="e.g. Weight Loss, Yoga, Strength Training" required />
+            </div>
+
+            <div class="col-12 mt-5">
+              <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm">
+                <i class="bi bi-person-plus-fill me-2"></i> Register Trainer
+              </button>
+            </div>
+            
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

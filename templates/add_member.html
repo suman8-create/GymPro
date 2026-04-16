@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Add Member — GymPro{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <a href="{{ url_for('index') }}" class="text-decoration-none text-muted mb-3 d-inline-block">
+      <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+    </a>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-5">
+        <h2 class="mb-4">New Registration</h2>
+        <form method="POST" action="{{ url_for('add_member') }}">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-muted small text-uppercase">Full Name</label>
+              <input type="text" class="form-control form-control-lg" name="name" required />
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label text-muted small text-uppercase">Phone Number</label>
+              <input type="tel" class="form-control form-control-lg" name="phone" required />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-muted small text-uppercase">Join Date</label>
+              <input type="date" class="form-control form-control-lg" name="join_date" value="{{ today }}" required />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-muted small text-uppercase">Membership Plan</label>
+              <select name="plan_type" class="form-select form-select-lg">
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Yearly">Yearly</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-muted small text-uppercase">Assign Trainer (Optional)</label>
+              <select name="trainer_id" class="form-select form-select-lg">
+                <option value="">-- No Trainer --</option>
+                {% for trainer in trainers %}
+                  <option value="{{ trainer.id }}">{{ trainer.name }} ({{ trainer.specialty }})</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-12 mt-4">
+              <div class="form-check form-switch p-0 d-flex align-items-center gap-3 bg-light p-3 rounded border">
+                <label class="form-check-label fw-bold flex-grow-1 ms-2" for="fee_paid">Has the initial fee been paid?</label>
+                <input class="form-check-input ms-0 fs-4" type="checkbox" id="fee_paid" name="fee_paid">
+              </div>
+            </div>
+
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm">
+                Complete Registration
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

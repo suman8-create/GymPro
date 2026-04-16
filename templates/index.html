@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — GymPro{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <h1 class="display-5 mb-0">Members</h1>
+    <p class="text-muted">Manage your gym community and subscriptions</p>
+  </div>
+  {% if current_user.role == 'admin' %}
+    <a href="{{ url_for('add_member') }}" class="btn btn-primary btn-lg shadow-sm">
+      <i class="bi bi-person-plus-fill me-2"></i>Add Member
+    </a>
+  {% endif %}
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <form action="{{ url_for('index') }}" method="GET" class="d-flex gap-2">
+      <input type="text" name="q" class="form-control" placeholder="Search members by name..." value="{{ search_query }}">
+      <button type="submit" class="btn btn-secondary px-4">Search</button>
+      {% if search_query %}
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm bg-primary text-white h-100">
+      <div class="card-body d-flex align-items-center justify-content-between p-4">
+        <div>
+          <h6 class="text-uppercase mb-1 opacity-75">Total Members</h6>
+          <h2 class="display-6 mb-0 fw-bold">{{ total_members }}</h2>
+        </div>
+        <i class="bi bi-people display-4 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm bg-danger text-white h-100">
+      <div class="card-body d-flex align-items-center justify-content-between p-4">
+        <div>
+          <h6 class="text-uppercase mb-1 opacity-75">Expired / Unpaid</h6>
+          <h2 class="display-6 mb-0 fw-bold">{{ total_unpaid }}</h2>
+        </div>
+        <i class="bi bi-exclamation-circle display-4 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm bg-success text-white h-100">
+      <div class="card-body d-flex align-items-center justify-content-between p-4">
+        <div>
+          <h6 class="text-uppercase mb-1 opacity-75">Today's Check-ins</h6>
+          <h2 class="display-6 mb-0 fw-bold">{{ today_attendance }}</h2>
+        </div>
+        <i class="bi bi-calendar-check display-4 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th class="ps-4">Member Name</th>
+          <th>Plan</th>
+          <th>Trainer</th>
+          <th>Status</th>
+          <th class="text-end pe-4">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for member in members %}
+        <tr>
+          <td class="ps-4">
+            <span class="fw-bold text-dark">{{ member.name }}</span><br>
+            <small class="text-muted">{{ member.phone }}</small>
+          </td>
+          <td><span class="badge bg-light text-dark border">{{ member.plan_type }}</span></td>
+          <td class="text-muted">
+            <i class="bi bi-person-badge me-1"></i>
+            {{ member.trainer.name if member.trainer else 'None' }}
+          </td>
+          <td>
+            {% if member.is_active %}
+              <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Active</span>
+              <div class="small text-muted mt-1" style="font-size: 0.75rem;">Ends {{ member.subscription_end_date.strftime('%d %b %Y') }}</div>
+            {% else %}
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">Expired</span>
+            {% endif %}
+          </td>
+          <td class="text-end pe-4">
+            <div class="btn-group shadow-sm">
+              <a href="{{ url_for('mark_attendance', member_id=member.id) }}" class="btn btn-sm btn-outline-success" title="Mark Present"><i class="bi bi-calendar-check"></i></a>
+              
+              {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('record_payment', member_id=member.id) }}" class="btn btn-sm btn-outline-warning" title="Record Renewal Payment" onclick="return confirm('Record a new {{ member.plan_type }} payment for {{ member.name }}?');"><i class="bi bi-currency-dollar"></i></a>
+              {% endif %}
+              
+              <a href="{{ url_for('member_detail', member_id=member.id) }}" class="btn btn-sm btn-outline-primary" title="Details"><i class="bi bi-eye"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="text-center py-4 text-muted">No members found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
