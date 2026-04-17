@@ -137,7 +137,7 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('login'))
 
-# --- Main Routes (Kept Identical to Before) ---
+# --- Main Routes ---
 @app.route('/')
 @login_required
 def index():
@@ -233,17 +233,48 @@ def export_csv():
         mimetype="text/csv", 
         headers={"Content-Disposition": "attachment; filename=attendance.csv"}
     )
+
 @app.route('/trainers')
 @admin_required
-def trainers(): return render_template('trainers.html', trainers=Trainer.query.all())
+def trainers(): 
+    return render_template('trainers.html', trainers=Trainer.query.all())
 
 @app.route('/add_trainer', methods=['GET', 'POST'])
 @admin_required
 def add_trainer():
     if request.method == 'POST':
-        db.session.add(Trainer(name=request.form.get('name'), specialty=request.form.get('specialty')))
+        # 1. Get the data from your HTML form
+        trainer_name = request.form.get('name')
+        specialty = request.form.get('specialty')
+        username = request.form.get('username')
+        
+        # 2. Create the Trainer Profile first
+        new_trainer = Trainer(name=trainer_name, specialty=specialty)
+        db.session.add(new_trainer)
+        
+        # We use flush() instead of commit() so we can get the new_trainer.id 
+        # before permanently saving it to the database.
+        db.session.flush() 
+
+        # 3. Generate a default password (e.g., "trainer123")
+        default_password = "trainer123"
+        hashed_pw = generate_password_hash(default_password)
+
+        # 4. Create the User Login and link it to the Trainer
+        new_user = User(
+            username=username, 
+            password_hash=hashed_pw, 
+            role='trainer', 
+            trainer_id=new_trainer.id  # This links the two tables!
+        )
+        db.session.add(new_user)
+        
+        # 5. Save EVERYTHING to the database at once
         db.session.commit()
+
+        flash(f"Trainer added! They can log in with username '{username}' and password '{default_password}'.", 'success')
         return redirect(url_for('trainers'))
+        
     return render_template('add_trainer.html')
 
 # --- NEW NOTIFICATION ROUTES ---
