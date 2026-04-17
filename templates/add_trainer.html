@@ -12,7 +12,7 @@
     <div class="card border-0 shadow-sm">
       <div class="card-body p-5">
         <h2 class="mb-4">Add Trainer</h2>
-        <p class="text-muted mb-4">Register a new personal trainer profile to the system.</p>
+        <p class="text-muted mb-4">Register a new personal trainer profile and login credentials.</p>
 
         <form method="POST" action="{{ url_for('add_trainer') }}">
           <div class="row g-4">
@@ -29,8 +29,20 @@
                      placeholder="e.g. Weight Loss, Yoga, Strength Training" required />
             </div>
 
-            <div class="col-12 mt-5">
-              <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm">
+            <div class="col-12">
+              <label for="username" class="form-label text-muted small text-uppercase">Login Username</label>
+              <input type="text" class="form-control form-control-lg" id="username" name="username"
+                     placeholder="e.g. arjun_fitness" required />
+              <div class="form-text text-muted mt-2">
+                <i class="bi bi-info-circle"></i> They will use this to log into the portal. Default password will be <strong>'trainer123'</strong>.
+              </div>
+            </div>
+
+            <div class="col-12 mt-5 d-flex gap-3">
+              <a href="{{ url_for('trainers') }}" class="btn btn-light btn-lg w-50 py-3 shadow-sm border">
+                Cancel
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg w-50 py-3 shadow-sm">
                 <i class="bi bi-person-plus-fill me-2"></i> Register Trainer
               </button>
             </div>
